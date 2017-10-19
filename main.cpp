@@ -17,6 +17,9 @@ struct contact
 contact* firstItem = NULL;
 contact* lastItem = NULL;
 
+//file
+fstream file;
+
 // class for action
 class Action
 {
@@ -34,16 +37,30 @@ class FileManager
 {
 public:
     static void WriteInFile(string,string,string);
+    static void getAllFileContent();
 };
+
+void FileManager::getAllFileContent()
+{
+    string line;
+    ifstream file("contacts.txt", ios::in);
+    if(file.is_open())
+    {
+        while (getline(file,line))
+        {
+            cout << line << "\n";
+        }
+
+        file.close();
+    }
+}
 
 void FileManager::WriteInFile(string name, string lastName, string phoneNumber)
 {
+    //open the txt file
+    file.open("contacts.txt", ios::app);
 
-    //txt file
-    ofstream file;
-
-    file.open("contacts.txt", ios::out);
-
+    //write in the file
     file << "--------------------------------------------------------\n";
     file << "Nombre del contacto: " << name << "\n";
     file << "Apellido del contacto: " << lastName << "\n";
@@ -108,12 +125,10 @@ void Action::addContact(contact *newContact)
 void Action::showContacts()
 {
     //show the items if there are
-    if (firstItem != NULL)
-    {
-        contact* i = firstItem;
+    if (firstItem != NULL) {
+        contact *i = firstItem;
 
-        while(i != NULL)
-        {
+        while (i != NULL) {
             cout << "--------------------------------------------------------\n";
             cout << "Nombre del contacto: " << i->name << "\n";
             cout << "Apellido del contacto: " << i->lastName << "\n";
@@ -127,11 +142,14 @@ void Action::showContacts()
 
     }
 
-        //there aren't items
+    //there aren't items
     else
     {
-        cout << "La lista esta vacia";
+        cout << "La lista esta vacia\n";
     }
+
+    cout << "Contactos previamente guardados\n";
+    FileManager::getAllFileContent();
 }
 
 void Action::menu()
